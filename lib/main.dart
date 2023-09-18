@@ -1,5 +1,5 @@
-import 'package:ecanteen/page/list_food.dart';
-import 'package:ecanteen/page/main.dart';
+// import 'package:ecanteen/page/login/splash-screen.dart';
+import 'package:ecanteen/page/foodscreen/list_food.dart';
 import 'package:flutter/material.dart';
 
 void main() {
