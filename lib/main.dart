@@ -1,5 +1,4 @@
-// import 'package:ecanteen/page/login/splash-screen.dart';
-import 'package:ecanteen/page/foodscreen/list_food.dart';
+import 'package:ecanteen/page/login/splash-screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ListFoodPage(),
+      home: SlideView(),
     );
   }
 }
