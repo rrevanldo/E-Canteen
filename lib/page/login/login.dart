@@ -1,12 +1,10 @@
-// import 'dart:convert';
+import 'dart:convert';
 
-// import 'package:ecanteen/page/dashboard/home.dart';
 import 'package:ecanteen/page/dashboard/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:from_css_color/from_css_color.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,79 +14,81 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool loading = false;
+  
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   final bool _obscureText = true;
 
-  // Future login(String email, String password) async {
-  //   if (_formKey.currentState!.validate()) {}
-  //   try {
-  //     http.Response response = await http.post(
-  //       Uri.parse('http://3.27.72.203:3000/auth/login'),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       body: jsonEncode(<String, String>{
-  //         'email': _emailController.text.trim(),
-  //         'password': _passwordController.text.trim(),
-  //       }),
-  //     );
+  Future login(String email, String password) async {
+    if (_formKey.currentState!.validate()) {}
+    try {
+      http.Response response = await http.post(
+        Uri.parse('https://be.wikrama.shop/api/v1/auth/login'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': _emailController.text.trim(),
+          'password': _passwordController.text.trim(),
+        }),
+      );
 
-  //     if (response.statusCode == 200) {
-  //       var data = jsonDecode(response.body);
-  //       print("Ini value dari $data");
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        print("Ini value dari $data");
 
-  //       print("response akses token ${data['accessToken']}");
-  //       // print("response ${response.body['user']}");
-  //       await LocalStorage().setBearerToken(data['accessToken']);
+        // print("response akses token ${data['accessToken']}");
+        // // print("response ${response.body['user']}");
+        // await LocalStorage().setBearerToken(data['accessToken']);
 
-  //       print("Ini respon user ${data['user']}");
-  //       // print("response ${response.body['user']}");
-  //       await LocalStorage().setDataUser(data['user']);
+        // print("Ini respon user ${data['user']}");
+        // // print("response ${response.body['user']}");
+        // await LocalStorage().setDataUser(data['user']);
 
-  //       Navigator.pushAndRemoveUntil(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (BuildContext context) => const MyHomePage(),
-  //           ),
-  //           (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const MyHomePage(),
+            ),
+            (route) => false);
 
-  //       print('Success login');
-  //     } else {
-  //       print('failed login');
-  //       showDialog(
-  //         context: context,
-  //         builder: (_) => AlertDialog(
-  //           title: Text('Failed Login!'),
-  //           content: Text('Make sure you have an internet network'),
-  //           actions: [
-  //             ElevatedButton(
-  //               child: Text('Back'),
-  //               onPressed: () => Navigator.pop(context),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print("ini error dari $e");
-  //     showDialog(
-  //       context: context,
-  //       builder: (_) => AlertDialog(
-  //         title: Text('Failed Login!'),
-  //         content: Text('Make sure you have an internet network'),
-  //         actions: [
-  //           ElevatedButton(
-  //             child: Text('Back'),
-  //             onPressed: () => Navigator.pop(context),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //   }
-  // }
+        print('Success login');
+      } else {
+        print('failed login');
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('Failed Login!'),
+            content: Text('Make sure you have an internet network'),
+            actions: [
+              ElevatedButton(
+                child: Text('Back'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      print("ini error dari $e");
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('Failed Login!'),
+          content: Text('Make sure you have an internet network'),
+          actions: [
+            ElevatedButton(
+              child: Text('Back'),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,17 +145,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Color.fromRGBO(228, 228, 228, 1),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: TextFormField(
-                      keyboardType: TextInputType.name,
-                      controller: _usernameController,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your username';
+                          return 'Please enter your email';
                         }
                         return null;
                       },
                       cursorColor: Colors.grey,
                       decoration: InputDecoration(
-                        hintText: "Insert Username...",
+                        hintText: "Insert Email...",
                         hintStyle: GoogleFonts.poppins(
                           fontSize: 16,
                           color: Colors.grey.withOpacity(0.7),
@@ -267,6 +267,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromRGBO(65, 92, 233, 1)),
                       onPressed: () async {
+                        setState(() {
+                    loading = true;
+                  });
+                  await login(_emailController.text.toString(),
+                      _passwordController.text.toString());
+                  setState(() {
+                    loading = false;
+                  });
                         Navigator.push(
                           context,
                           MaterialPageRoute(

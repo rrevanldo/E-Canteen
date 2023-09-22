@@ -41,6 +41,7 @@ dependencies:
   google_fonts: ^4.0.4
   http: ^0.13.6
   responsive_framework: ^1.0.0
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:
