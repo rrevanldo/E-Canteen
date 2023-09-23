@@ -96,7 +96,7 @@ class _ListFoodPageState extends State<ListFoodPage> {
                                       ),
                                     ],
                                   ),
-                                  Padding(padding: EdgeInsets.only(bottom: 30)),
+                                  // Padding(padding: EdgeInsets.only(bottom: 30)),
                                   Container(
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.height,
@@ -156,7 +156,10 @@ class _ListFoodPageState extends State<ListFoodPage> {
                                                               IconButton(
                                                                 onPressed: () {
                                                                   setState(() {
-                                                                    _hitung--;
+                                                                    if (_hitung >
+                                                                        0) {
+                                                                      _hitung--;
+                                                                    }
                                                                   });
                                                                 },
                                                                 icon:
